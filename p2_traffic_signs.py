@@ -12,8 +12,9 @@ import matplotlib.pyplot as plt
 from math import *
 import sys
 
-# This file is too large for github and is downloadable at
+# These files are too large for github and are downloadable at
 # https://s3-eu-west-1.amazonaws.com/carnd-rmic/x_train_augmented_test.p
+# https://s3-eu-west-1.amazonaws.com/carnd-rmic/y_train_augmented_test.p
 x_training_file = "./datasets/x_train_augmented_test.p"
 y_training_file = "./datasets/y_train_augmented_test.p"
 validation_file = "./datasets/valid.p"
