@@ -11,24 +11,25 @@ from sklearn.utils import shuffle
 import matplotlib.pyplot as plt
 from math import *
 import sys
+training_file = "./datasets/train.p"
 x_training_file = "./datasets/x_train_augmented_test.p"
 y_training_file = "./datasets/y_train_augmented_test.p"
 validation_file = "./datasets/valid.p"
 testing_file = "./datasets/test.p"
 
-#with open(training_file, mode='rb') as f:
-#    train = pickle.load(f)
+with open(training_file, mode='rb') as f:
+    train = pickle.load(f)
 with open(validation_file, mode='rb') as f:
     valid = pickle.load(f)
 with open(testing_file, mode='rb') as f:
     test = pickle.load(f)
 
-#X_train, y_train = train['features'], train['labels']
-with open(x_training_file, mode='rb') as f:
-    X_train = pickle.load(f)
+X_train, y_train = train['features'], train['labels']
+#with open(x_training_file, mode='rb') as f:
+#    X_train = pickle.load(f)
 
-with open(y_training_file, mode='rb') as f:
-    y_train = pickle.load(f)
+#with open(y_training_file, mode='rb') as f:
+#    y_train = pickle.load(f)
 
 
 X_valid, y_valid = valid['features'], valid['labels']
@@ -209,33 +210,33 @@ images_in_class = 5000
 # PRE PROCESSING
 
 def pre_process(img):
-    return ((img - [128, 128, 128]) / 128)
+    return ((img - [128.0, 128.0, 128.0]) / 128.0)
 
-#X_train = np.array(map(pre_process, X_train))
-
+#X_train = np.array(list(map(pre_process, X_train)))
+#X_valid = np.array(list(map(pre_process, X_valid)))
 
 # MODEL ARCHITECTURE
 
 import tensorflow as tf
 
-EPOCHS = 10
-BATCH_SIZE = 150
+EPOCHS = 50
+BATCH_SIZE = 128
 
 from tensorflow.contrib.layers import flatten
 import tfhelper
 
 strides = {  "l1": 1, "p1": 2, 'l2': 1, 'p2': 2, 'l3': 1, 'l4':1, "out": 1}
 
-dropout = { "l3": 0.75,  "l4": 0.60, 'out': 0.75 }
+dropout = { "l3": .75,  "l4": .70, 'out': 1.0 }
 
 
 shapes = {
     'input': [32,32,3],
-    'l1': [32,32,64],
-    'p1': [16,16,64],
-    'l2': [16,16,128],
-    'p2': [8,8,128],
-    'flat': [8192],
+    'l1': [32,32,6],
+    'p1': [16,16,6],
+    'l2': [16,16,12],
+    'p2': [8,8,12],
+    'flat': [768],
     'l3': [512],
     'l4': [512],
     'out': [43]
@@ -290,7 +291,7 @@ y = tf.placeholder(tf.int32, (None))
 one_hot_y = tf.one_hot(y, 43)
 
 # Training pipeline
-rate = 0.001
+rate = 0.01
 
 logits = LeNet(x)
 cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=one_hot_y)

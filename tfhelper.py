@@ -10,9 +10,6 @@ class TFHelper:
         self.shapes = shapes
         self.pipeline = pipeline
 
-
-
-
     def shape(self, input, output):
         #print("shape " + input + ", " + output)
         height = 1+  ceil(float(self.shapes[input][0] - self.shapes[output][0] ) / float(self.strides[output]))
@@ -48,7 +45,7 @@ class TFHelper:
     # inputs : A 4-D Tensor with shape [batch, height, width, channels] and type tf.float32.
     # new_height = (input_height - filter_height)/ S + 1
     # new_width = (input_width - filter_width)/ S + 1
-    def poolLayer(self, inputs, idLayer, padding='VALID'):
+    def poolLayer(self, inputs, idLayer, padding='SAME'):
         layer = tf.nn.max_pool(inputs, ksize=self.stride(idLayer), strides=self.stride(idLayer), padding=padding, name=idLayer)
         return layer
 
@@ -56,7 +53,7 @@ class TFHelper:
     # The shape of the filter bias is (output_depth,)
     # new_height = (input_height - filter_height + 2 * P)/S + 1
     # new_width = (input_width - filter_width + 2 * P)/S + 1
-    def convLayer(self, inputs, idLayer, padding='VALID'):
+    def convLayer(self, inputs, idLayer, padding='SAME'):
         layer = tf.nn.conv2d(inputs, self.weight(idLayer), strides=self.stride(idLayer), padding=padding)
         layer = tf.nn.bias_add(layer, self.bias(idLayer))
         return tf.nn.relu(layer, name=idLayer)
