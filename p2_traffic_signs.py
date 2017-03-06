@@ -11,10 +11,6 @@ from sklearn.utils import shuffle
 import matplotlib.pyplot as plt
 from math import *
 import sys
-
-# These files are too large for github and are downloadable at
-# https://s3-eu-west-1.amazonaws.com/carnd-rmic/x_train_augmented_test.p
-# https://s3-eu-west-1.amazonaws.com/carnd-rmic/y_train_augmented_test.p
 x_training_file = "./datasets/x_train_augmented_test.p"
 y_training_file = "./datasets/y_train_augmented_test.p"
 validation_file = "./datasets/valid.p"
@@ -222,8 +218,8 @@ def pre_process(img):
 
 import tensorflow as tf
 
-EPOCHS = 5
-BATCH_SIZE = 128
+EPOCHS = 10
+BATCH_SIZE = 150
 
 from tensorflow.contrib.layers import flatten
 import tfhelper
@@ -294,7 +290,7 @@ y = tf.placeholder(tf.int32, (None))
 one_hot_y = tf.one_hot(y, 43)
 
 # Training pipeline
-rate = 0.01
+rate = 0.001
 
 logits = LeNet(x)
 cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=one_hot_y)
@@ -338,9 +334,10 @@ with tf.Session() as sess:
             end = offset + BATCH_SIZE
             batch_x, batch_y = X_train[offset:end], y_train[offset:end]
             sess.run(training_operation, feed_dict={x: batch_x, y: batch_y})
-            update_progress(offset * 100 / num_examples)
+            update_progress(end * 100 / num_examples)
 
-        validation_accuracy = evaluate(X_valid, y_valid)
+
         print("EPOCH {} ...".format(i + 1))
+        validation_accuracy = evaluate(X_valid, y_valid)
         print("Validation Accuracy = {:.3f}".format(validation_accuracy))
         print()
