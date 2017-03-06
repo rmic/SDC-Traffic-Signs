@@ -27,8 +27,11 @@ class TFHelper:
 
 
     def randNormVar(self, param):
+        mu = 0
+        sigma = 0.1
+
         #print("making random var of size "+str(param))
-        return tf.Variable(tf.truncated_normal(param))
+        return tf.Variable(tf.truncated_normal(param, mean=mu, stddev=sigma))
 
 
     def bias(self, idLayer):
