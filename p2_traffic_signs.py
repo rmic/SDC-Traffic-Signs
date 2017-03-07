@@ -219,30 +219,31 @@ X_valid = np.array(list(map(pre_process, X_valid)))
 
 import tensorflow as tf
 
-EPOCHS = 50
-BATCH_SIZE = 128
+
+EPOCHS = 100
+BATCH_SIZE = 250
 
 from tensorflow.contrib.layers import flatten
 import tfhelper
 
 strides = {  "l1": 1, "p1": 2, 'l2': 1, 'p2': 2, 'l3': 1, 'l4':1, "out": 1}
 
-dropout = { "l3": .75,  "l4": .70, 'out': 1.0 }
+dropout = { "l3": .75,  "l4": .75, 'out': 0.75 }
 
 
 shapes = {
     'input': [32,32,3],
-    'l1': [32,32,6],
-    'p1': [16,16,6],
-    'l2': [16,16,12],
-    'p2': [8,8,12],
-    'flat': [768],
-    'l3': [768],
-    'l4': [768],
+    'l1': [28,28,6],
+    'p1': [14,14,6],
+    'l2': [10,10,16],
+    'p2': [5,5,16],
+    'flat': [400],
+    'l3': [86],
+    'l4': [43],
     'out': [43]
 }
 
-pipeline = ['input', 'l1', 'p1', 'l2', 'p2', 'flat', 'l3', 'l4', 'out']
+pipeline = ['input', 'l1','p1',  'l2', 'p2', 'flat', 'l3', 'l4', 'out']
 
 
 tfh = tfhelper.TFHelper(strides, dropout, shapes, pipeline)
