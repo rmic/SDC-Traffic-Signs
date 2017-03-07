@@ -212,8 +212,8 @@ images_in_class = 5000
 def pre_process(img):
     return ((img - [128.0, 128.0, 128.0]) / 128.0)
 
-#X_train = np.array(list(map(pre_process, X_train)))
-#X_valid = np.array(list(map(pre_process, X_valid)))
+X_train = np.array(list(map(pre_process, X_train)))
+X_valid = np.array(list(map(pre_process, X_valid)))
 
 # MODEL ARCHITECTURE
 
@@ -237,8 +237,8 @@ shapes = {
     'l2': [16,16,12],
     'p2': [8,8,12],
     'flat': [768],
-    'l3': [512],
-    'l4': [512],
+    'l3': [768],
+    'l4': [768],
     'out': [43]
 }
 
