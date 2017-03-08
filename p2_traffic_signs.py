@@ -7,6 +7,7 @@ import random
 import matplotlib
 
 from sklearn.utils import shuffle
+from sklearn.model_selection import train_test_split
 
 import matplotlib.pyplot as plt
 from math import *
@@ -25,6 +26,9 @@ with open(testing_file, mode='rb') as f:
     test = pickle.load(f)
 
 X_train, y_train = train['features'], train['labels']
+X_train, y_train = shuffle(X_train, y_train)
+
+X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, test_size=0.10, random_state=42)
 #with open(x_training_file, mode='rb') as f:
 #    X_train = pickle.load(f)
 
@@ -32,8 +36,8 @@ X_train, y_train = train['features'], train['labels']
 #    y_train = pickle.load(f)
 
 
-X_valid, y_valid = valid['features'], valid['labels']
-X_test, y_test = test['features'], test['labels']
+#X_valid, y_valid = valid['features'], valid['labels']
+#X_test, y_test = test['features'], test['labels']
 
 
 
@@ -44,7 +48,7 @@ X_test, y_test = test['features'], test['labels']
 n_train = X_train.shape[0]
 n_valid = X_valid.shape[0]
 # TODO: Number of testing examples.
-n_test = X_test.shape[0]
+#n_test = X_test.shape[0]
 
 # TODO: What's the shape of an traffic sign image?
 image_shape = X_train[0].shape
@@ -55,7 +59,7 @@ n_classes = len(unique_labels)
 
 print("Number of training examples =", n_train)
 print("Number of validation examples =", n_valid)
-print("Number of testing examples =", n_test)
+#print("Number of testing examples =", n_test)
 print("Image data shape =", image_shape)
 print("Number of classes =", n_classes)
 
@@ -210,18 +214,21 @@ images_in_class = 5000
 # PRE PROCESSING
 
 def pre_process(img):
-    return ((img - [128.0, 128.0, 128.0]) / 128.0)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    img = ((img - [128.0]) / 128.0)
+    return img.reshape(32,32,1)
 
 X_train = np.array(list(map(pre_process, X_train)))
 X_valid = np.array(list(map(pre_process, X_valid)))
-
+print("After pre-processing")
+print(X_train.shape)
 # MODEL ARCHITECTURE
 
 import tensorflow as tf
 
 
 EPOCHS = 100
-BATCH_SIZE = 250
+BATCH_SIZE = 100
 
 from tensorflow.contrib.layers import flatten
 import tfhelper
@@ -232,14 +239,14 @@ dropout = { "l3": .75,  "l4": .75, 'out': 0.75 }
 
 
 shapes = {
-    'input': [32,32,3],
+    'input': [32,32,1],
     'l1': [28,28,6],
     'p1': [14,14,6],
     'l2': [10,10,16],
     'p2': [5,5,16],
     'flat': [400],
-    'l3': [86],
-    'l4': [43],
+    'l3': [120],
+    'l4': [84],
     'out': [43]
 }
 
@@ -287,17 +294,18 @@ def LeNet(x):
 
 # Feature And Labels
 
-x = tf.placeholder(tf.float32, (None, 32, 32, 3))
+x = tf.placeholder(tf.float32, (None, 32, 32, 1))
 y = tf.placeholder(tf.int32, (None))
 one_hot_y = tf.one_hot(y, 43)
 
 # Training pipeline
-rate = 0.005
 
+rate = 0.003
 logits = LeNet(x)
 cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=one_hot_y)
 loss_operation = tf.reduce_mean(cross_entropy)
-optimizer = tf.train.AdamOptimizer(learning_rate = rate)
+
+optimizer = tf.train.AdamOptimizer(learning_rate=rate)
 training_operation = optimizer.minimize(loss_operation)
 
 def update_progress(progress):
@@ -320,26 +328,30 @@ def evaluate(X_data, y_data):
     return total_accuracy / num_examples
 
 def update_progress(progress):
-    sys.stdout.write('\r[{0}{1}] {2}%'.format('#'*ceil(progress/10), ' '*(10-ceil(progress/10)), progress))
+    sys.stdout.write('\r[{0}{1}] {2:.2f}%'.format('#'*ceil(progress/10), ' '*(10-ceil(progress/10)), progress))
+
+
 
 
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     num_examples = len(X_train)
-
+    print(X_train.shape)
     print("Training...")
     print()
     for i in range(EPOCHS):
         #print("EPOCH "+str(i))
-        X_train, y_train = shuffle(X_train, y_train)
+
+
         for offset in range(0, num_examples, BATCH_SIZE):
             end = offset + BATCH_SIZE
             batch_x, batch_y = X_train[offset:end], y_train[offset:end]
+
             sess.run(training_operation, feed_dict={x: batch_x, y: batch_y})
             update_progress(end * 100 / num_examples)
 
 
-        print("EPOCH {} ...".format(i + 1))
+        print("\n\nEPOCH {} ...".format(i + 1))
         validation_accuracy = evaluate(X_valid, y_valid)
         print("Validation Accuracy = {:.3f}".format(validation_accuracy))
         print()
