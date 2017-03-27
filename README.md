@@ -71,9 +71,9 @@ The code for my final model is located in cells 8, 9 and 10 of the ipython noteb
 My final model consisted of the following layers:
 
 | Layer         		|     Description	        					| 
-|:---------------------:|:---------------------------------------------:| 
-| Input         		| :32x32x3 RGB image   							| 
-| Convolution 3x3     	| :1x1 stride, valid padding, outputs 28x28x18 	|
+|---------------------|---------------------------------------------| 
+| Input         		| 32x32x3 RGB image   							| 
+| Convolution 3x3     	| 1x1 stride, valid padding, outputs 28x28x18 	|
 | RELU					|												|
 | Max pooling	      	| 2x2 stride,  outputs 14x14x18 				|
 | Convolution 3x3     	| 1x1 stride, valid padding, outputs 10x10x36 	|
@@ -101,7 +101,7 @@ To train the model, I used an Adam Optimizer with a batch size of 90 and 100 epo
 
 The best learning rate is very low at .00004. Setting the learning rate higher leads to low and decreasing accuracy to a value close to zero. Setting it lower makes the network very slow to learn.
 
-####5. Describe the approach taken for finding a solution. 
+#### 5. Describe the approach taken for finding a solution. 
 
 The initial approach was to start with the LeNet architecture as is. The network initially did not learn anything (low and decreasing accuracy), until I found a good learning rate. 
 
