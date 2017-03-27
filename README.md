@@ -39,6 +39,7 @@ After this data augmentation step,
 * The shape of a traffic sign image is 32x32x3 (RGB)
 * The number of unique classes/labels in the data set is 43.
 
+The augmented data sets are available at : [X_training_file](https://s3-eu-west-1.amazonaws.com/carnd-rmic/x_train_augmented_test.p) and [Y_training_file](https://s3-eu-west-1.amazonaws.com/carnd-rmic/y_train_augmented_test.p)
 #### 2. Include an exploratory visualization of the dataset and identify where the code is in your code file.
 
 Code cell 3 displays the first image of each class, and cell 4 displays the final distribution after the data augmentation step. It shows that the data is better balanced than initially.
