@@ -15,7 +15,7 @@ The goals / steps of this project are the following:
 
 
 ## Rubric Points
-###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
+Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
 
 ---
 ### Writeup / README
@@ -72,8 +72,8 @@ My final model consisted of the following layers:
 
 | Layer         		|     Description	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| Input         		| 32x32x3 RGB image   							| 
-| Convolution 3x3     	| 1x1 stride, valid padding, outputs 28x28x18 	|
+| Input         		| :32x32x3 RGB image   							| 
+| Convolution 3x3     	| :1x1 stride, valid padding, outputs 28x28x18 	|
 | RELU					|												|
 | Max pooling	      	| 2x2 stride,  outputs 14x14x18 				|
 | Convolution 3x3     	| 1x1 stride, valid padding, outputs 10x10x36 	|
@@ -89,7 +89,7 @@ My final model consisted of the following layers:
 | Fully connected		| Outputs 43        									|
 | RELU | |
 | Dropout | Probability : 1 |
-|---------------|-------------------------|
+
  
 
 
